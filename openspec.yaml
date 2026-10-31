@@ -1,0 +1,589 @@
+openapi: 3.0.3
+info:
+  title: Overplanner API v1
+  version: 1.0.0
+  description: |
+    An API for Overplanner event data. Created by Jeremy Stiava.
+    <br/><br/>Started November 2026. Last updated November 2026.
+servers:
+  - url: https://api.overplanner.com/v1
+tags:
+  - name: Individual events
+    description: Working with singular events
+  - name: Events
+    description: Manipulating batches of events
+  - name: Attendees
+    description: Users attending an event
+  - name: Users
+    description: Manage users
+  - name: Authentication & authorization
+    description: Security
+  - name: Todos
+    description: Methods avaliable for todo events
+paths:
+  /events/:id:
+    get:
+      tags:
+        - Individual events
+      summary: Retrieve an event
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "404":
+          description: Could not find event
+        "200":
+          description: A friendly greeting
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    default: true
+                  data:
+                    type: object
+                    default:
+                      {
+                        id: "e_23hgkdsnkgdlsgd",
+                        name: "My event",
+                        description: "The is a description for the event",
+                        location_address:
+                          {
+                            line1: "2000 W. Madison St.",
+                            line2: null,
+                            city: "Chicago",
+                            state: "IL",
+                            country: "USA",
+                            zip_code: "60634",
+                          },
+                        type: "todo",
+                        behavior: null,
+                        status: "scheduled",
+                        published: false,
+                        private: false,
+                        created_at: "2026-10-30T09:00:00Z",
+                        last_updated_at: "2026-10-30T09:00:00Z",
+                        published_at: null,
+                        due_at: "2026-10-30T09:00:00Z",
+                        completed_at: "2026-10-30T09:00:00Z",
+                        "recurrence":
+                          {
+                            "frequency": "weekly",
+                            "interval": 1,
+                            "days_of_week": [1, 4],
+                          },
+                        content: "Rich text content here",
+                        attendance:
+                          {
+                            "status": "open",
+                            "accepted": 10,
+                            "max_accepted": 15,
+                            "declined": 5,
+                            "total_invited": 30,
+                            "awaited_response": 15,
+                            "last_updated_at": "2026-10-30T09:00:00Z",
+                          },
+                        "policies":
+                          [
+                            {
+                              "role": "guest",
+                              "statements":
+                                [
+                                  {
+                                    "version": 1.0,
+                                    "policies":
+                                      [
+                                        {
+                                          "Sid": "AllowOpenEventViewing",
+                                          "Effect": "Allow",
+                                          "Action":
+                                            ["events:GetSimple", "events:List"],
+                                          "Principal":
+                                            [
+                                              { "Type": "guest" },
+                                              { "Type": "declined" },
+                                            ],
+                                          "Resource": "events/e_23hgkdsnkgdlsgd",
+                                        },
+                                        {},
+                                      ],
+                                  },
+                                ],
+                            },
+                          ],
+                        events:
+                          [
+                            {
+                              id: "e_trigger_1",
+                              name: "Publish tomorrow at 5pm",
+                              type: "moment",
+                              behavior: "action",
+                              trigger: "scheduled",
+                              action: "todo::assign",
+                              trigger_at: "2026-10-30T09:00:00Z",
+                            },
+                            {
+                              id: "e_trigger_1",
+                              name: "Send email that todo is complete.",
+                              type: "moment",
+                              behavior: "action",
+                              trigger: "todo::onComplete",
+                              action: "custom",
+                              code: "The actions to complete",
+                            },
+                          ],
+                      }
+    patch:
+      tags:
+        - Individual events
+      summary: Update event content.
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: data
+          in: query
+          required: true
+          schema:
+            type: object
+            default: { name: "My new event name" }
+      responses:
+        "200":
+          description: A friendly greeting
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+
+    delete:
+      tags:
+        - Individual events
+      summary: Delete an event
+      parameters:
+        - name: id
+          in: query
+          required: true
+      responses:
+        "200":
+          description: A friendly greeting
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+
+  /events/:id/calendars:
+    get:
+      tags:
+        - Individual events
+      summary: Retrieve calendars the event is apart of. Events that the event depends on for data.
+      parameters:
+        - name: id
+          in: query
+          required: true
+      responses:
+        "200":
+          description: A friendly greeting
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /events/:id/events:
+    get:
+      tags:
+        - Individual events
+      summary: Retrieve sub-events for an event. Events that depend on date explicitly provided in the event.
+      in: query
+      required: true
+      responses:
+        "200":
+          description: A friendly greeting
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /events/:id/people:
+    get:
+      tags:
+        - Attendees
+      summary: Retrieve attendees for an event
+      parameters:
+        - name: id
+          in: query
+          required: true
+      responses:
+        "200":
+          description: A friendly greeting
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /events/:id/groups:
+    get:
+      tags:
+        - Attendees
+      summary: Retrieve groups for an event
+      parameters:
+        - name: id
+          in: query
+          required: true
+      responses:
+        "200":
+          description: A friendly greeting
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /events/:id/rsvp:
+    post:
+      tags:
+        - Attendees
+      summary: Update attendance
+      parameters:
+        - name: id
+          in: query
+          required: true
+        - name: status
+          in: query
+          required: true
+          schema:
+            enum:
+              - accept
+              - not_sure
+              - decline
+        - name: comment
+          in: query
+          schema:
+            type: string
+            default: "I'll be 10 min late"
+
+      responses:
+        "200":
+          description: A friendly greeting
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /events/:id/archive:
+    post:
+      tags:
+        - Individual events
+      summary: Archive an event
+      parameters:
+        - name: id
+          in: query
+          required: true
+      responses:
+        "200":
+          description: A friendly greeting
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /events/:id/publish:
+    post:
+      tags:
+        - Individual events
+      summary: Publish an event version
+      parameters:
+        - name: id
+          in: query
+          required: true
+      responses:
+        "200":
+          description: A friendly greeting
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /events/:id/restore:
+    post:
+      tags:
+        - Individual events
+      summary: Restore an event
+      parameters:
+        - name: id
+          in: query
+          required: true
+      responses:
+        "200":
+          description: A friendly greeting
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /events:
+    get:
+      tags:
+        - Events
+      summary:
+        Returns a list of events. The events are returned in sorted order, with
+        the most recent changes appearing first.
+      operationId: sayHello
+      parameters:
+        - name: user
+          in: query
+          description: Only return events associated with the user. Use user or parent event.
+          schema:
+            type: string
+            default: user_id
+        - name: parent_event
+          in: query
+          description: Only return events with the parent event of. Use instead of user.
+          schema:
+            type: string
+            default: parent_event_id
+        - name: depth
+          in: query
+          description: Indicate depth to drill when getting events list.
+          schema:
+            type: number
+            default: 1
+        - name: limit
+          in: query
+          description:
+            A limit on the number of objects returned. Limit can range from 1
+            to 100. Default 10.
+          schema:
+            type: number
+            default: 10
+        - name: date
+          in: query
+          description: Query events for date
+          schema:
+            type: object
+            example:
+              { start: "2026-10-30T09:00:00Z", end: "2026-10-30T24:00:00Z" }
+        - name: view
+          in: query
+          description: The type of events that should be fetched
+          schema:
+            type: string
+            enum:
+              - default
+              - logs
+              - versions
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    example:
+                      [
+                        { id: "e_1", name: "First event", type: "single_time" },
+                        {
+                          id: "e_2",
+                          name: "My second event",
+                          type: "single_time",
+                        },
+                      ]
+
+    post:
+      tags:
+        - Individual events
+        - Events
+      summary: Create a new event
+      parameters:
+        - name: name
+          in: query
+          description: Main named title of the event
+          schema:
+            type: string
+            default: Event name
+        - name: type
+          in: query
+          required: true
+          description: |
+            Type of the event:
+            - calendar: A long term grouping of events
+            - single_time: A normal event with a start and event date and time
+            - todo: Assigned date, due date, and completed date.
+            - all_day: Single all day
+            - multi_day: Calendar event in effect for many days.
+            - location: A physical place
+            - schedule: 
+            - reservation: A slot in a calendar
+            - moment: A marker in time, start and end are the same
+              - log: Internal use only, shows editor history 
+              - job: Action to be completed at the given time
+            - travel: Starting and ending at different locations
+          schema:
+            type: string
+            default: single_time
+            enum:
+              - single_time
+              - todo
+              - all_day
+              - multi_day
+              - location
+              - schedule
+              - reservation
+              - moment
+        - name: data
+          in: query
+          description: The data that makes the event
+          schema:
+            type: object
+            default: { name: "The name again", type: schedule }
+      responses:
+        "200":
+          description: OK
+    delete:
+      tags:
+        - Events
+      summary: Delete multiple events in one action
+      parameters:
+        - name: ids
+          in: query
+          description: Delete these events only
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+      responses:
+        "200":
+          description: OK
+
+  /events/search:
+    get:
+      tags:
+        - Events
+      summary: Search events in my scope by seearch query
+      parameters:
+        - name: query
+          in: query
+          description: The search query string.
+          schema:
+            type: string
+            default: Search query
+      responses:
+        "200":
+          description: OK
+  /users/:id:
+    get:
+      tags:
+        - Users
+      summary: Retrieve a user
+      responses:
+        "200":
+          description: OK
+  /login:
+    post:
+      tags:
+        - Authentication & authorization
+      summary: Login function
+      parameters:
+        - name: username
+          in: query
+          schema:
+            type: object
+            default: username
+        - name: password
+          in: query
+          schema:
+            type: object
+            default: password
+      responses:
+        "200":
+          description: OK
+  /register:
+    post:
+      tags:
+        - Authentication & authorization
+      summary: Register function
+      parameters:
+        - name: username
+          in: query
+          schema:
+            type: string
+            default: username
+        - name: password
+          in: query
+          schema:
+            type: string
+            default: password
+      responses:
+        "200":
+          description: OK
+  /reset-password:
+    post:
+      tags:
+        - Authentication & authorization
+      summary: Request password password function
+      parameters:
+        - name: email_address
+          in: query
+          schema:
+            type: string
+            default: email
+      responses:
+        "200":
+          description: OK
+  /update-password:
+    post:
+      tags:
+        - Authentication & authorization
+      summary: Update password
+      parameters:
+        - name: email_address
+          in: query
+          schema:
+            type: string
+            default: email
+      responses:
+        "200":
+          description: OK
