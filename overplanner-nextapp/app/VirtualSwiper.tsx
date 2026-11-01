@@ -25,25 +25,9 @@ const handleCreateDateArray = (target: OvrDate) => {
 
 export default function VirtualSwiper() {
 
-    console.log("Virtual swiper")
-
     const swiperRef = useRef<SwiperType | null>(null);
-    const appendNumber = useRef(500);
-    const prependNumber = useRef(1);
-
-    const buffer = 7
-    const keep = 30
-
-    const loadingStart = useRef(false)
-    const loadingEnd = useRef(false)
-    const trimming = useRef(false)
-
     const [activeSlide, setActiveSlide] = useState(1);
     const [dates, setDates] = useState(handleCreateDateArray(new OvrDate(new Date(), 'America/Chicago')))
-
-    const slideTo = (index: number) => {
-        swiperRef.current?.slideTo(index - 1, 0);
-    };
 
 
     return (
