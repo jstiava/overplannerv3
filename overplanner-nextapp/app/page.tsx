@@ -1,5 +1,5 @@
 import VirtualSwiper from "@/app/VirtualSwiper";
-import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupAction, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarRail } from "@/components/ui/sidebar";
+import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupAction, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarRail } from "@/components/ui/sidebar";
 import { auth } from "@/lib/auth";
 import { getMongoDb } from "@/lib/mongo";
 import { PlusIcon } from "lucide-react";
@@ -10,7 +10,7 @@ import { connection } from "next/server";
 
 export default async function Home() {
   await connection()
-  
+
   let connected = false;
 
   try {
@@ -31,16 +31,12 @@ export default async function Home() {
 
   return (
     <div className="flex flex-col h-screen w-full">
-      <header {...{
-        className: "h-12 bg-[#202020] w-full flex items-center justify-center text-xs"
-      }}>
-        {connected ? "MongoDB connected" : "Database unavailable"}
-      </header>
       <main {...{
-        className: "flex w-full h-[calc(100%-3rem)] p-1"
+        className: "flex justify-start w-full h-screen"
       }}>
         <Sidebar {...{
-          collapsible: 'icon'
+          collapsible: 'none',
+          className: "w-[15rem]"
         }}>
           <SidebarHeader />
           <SidebarContent>
@@ -54,10 +50,23 @@ export default async function Home() {
             <SidebarGroup></SidebarGroup>
             <SidebarGroup></SidebarGroup>
           </SidebarContent>
+          <SidebarFooter >
+            <span {...{
+              className: 'text-xs'
+            }}>{connected ? "MongoDB connected" : "Database unavailable"}</span>
+          </SidebarFooter>
           <SidebarRail />
         </Sidebar>
-        <div className="block w-full h-full overflow-hidden">
-          <VirtualSwiper />
+
+        <div className="flex flex-col items-start w-[calc(100%-15rem)] h-full px-1 gap-1">
+          <header {...{
+            className: "h-12 bg-[#151515] w-full flex items-center justify-center text-xs p-0"
+          }}>
+
+          </header>
+          <div className="block w-full h-full overflow-hidden h-[calc(100%-3rem)]">
+            <VirtualSwiper />
+          </div>
         </div>
       </main>
     </div>

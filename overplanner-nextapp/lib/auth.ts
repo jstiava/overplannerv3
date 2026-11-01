@@ -14,7 +14,7 @@ export const auth = betterAuth({
   baseURL: {
     allowedHosts: [
       "http://localhost:3000",
-      "*.vercel.app",
+      "https://overplannerv3.vercel.app",
     ],
     protocol: 'auto',
     fallback: 'https://overplannerv3.vercel.app'
