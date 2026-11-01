@@ -9,7 +9,7 @@ export default function ${1:FunctionName}() {
 }
 endsnippet
 
-snippet edf "export default async function" w
+snippet edaf "export default async function" w
 export default async function ${1:FunctionName}() {
 
 	return (

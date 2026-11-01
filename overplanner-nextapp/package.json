@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "email:dev": "email dev"
+    "email:dev": "email dev",
+    "mongo": "docker exec -it overplanner-mongodb mongosh -u admin -p localpassword --authenticationDatabase admin overplanner"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1161.0",

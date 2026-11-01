@@ -1,13 +1,24 @@
+import VerifyAccountEmail from "@/emails/VerifyAccountEmail";
 import { betterAuth } from "better-auth";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { MongoClient } from "mongodb";
+import { render } from "react-email";
+import { NodemailerEmailTransporter } from "./emails";
+import sendVerificationEmail from "@/app/(auth)/register/sendVerificationEmail";
 
 const client = new MongoClient(process.env.MONGO_URI!);
 const db = client.db();
 
 export const auth = betterAuth({
   database: mongodbAdapter(db),
-  baseURL: "http://localhost:3000/",
+  baseURL: {
+    allowedHosts: [
+      "http://localhost:3000",
+      "*.vercel.app",
+    ],
+    protocol: 'auto',
+    fallback: 'https://overplannerv3.vercel.app'
+  },
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: true
@@ -17,12 +28,8 @@ export const auth = betterAuth({
     sentOnSignIn: false,
     autoSignInAfterVerification: true,
     expiresIn: 60 * 60,
-    sendVerificationEmail: async ({ user, url }) => {
-      // void sendEmail({
-      //   to: user.email,
-      //   subject: "Verify your email address",
-      //   text: `Click the following link to verify your email: ${url}`,
-      // });
-    },
+    sendVerificationEmail
   }
 });
+
+

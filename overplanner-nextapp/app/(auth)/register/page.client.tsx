@@ -8,6 +8,7 @@ import useDataStore from "@/components/useDataStore";
 import { authClient } from "@/lib/auth-client";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 type DataStoreType = {
@@ -20,6 +21,7 @@ type DataStoreType = {
 
 export default function RegisterClientPage() {
 
+    const router = useRouter();
     const Data = useDataStore<DataStoreType | null>(null);
     const [progress, setProgress] = useState('entry');
     const [showPassword, setShowPassword] = useState(false);
@@ -59,7 +61,7 @@ export default function RegisterClientPage() {
             onSuccess: (ctx) => {
                 //redirect to the dashboard or sign in page
                 setProgress('submitted');
-                alert("Success")
+                router.push('/check-your-email');
             },
             onError: (ctx) => {
                 // display the error message
@@ -96,7 +98,7 @@ export default function RegisterClientPage() {
                                 autoComplete: "name",
                                 "aria-invalid": isNameError,
                                 required: true,
-                                value: Data.data?.name,
+                                value: Data.data?.name ?? "",
                                 onChange: Data.handleChangeData,
                                 className: "w-full rounded-md border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring h-10"
                             }}
@@ -115,12 +117,12 @@ export default function RegisterClientPage() {
                                 "aria-invalid": isEmailError,
                                 required: true,
                                 minLength: 8,
-                                value: Data.data?.email,
+                                value: Data.data?.email ?? "",
                                 onChange: Data.handleChangeData,
                                 className: "w-full rounded-md border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring h-10"
                             }}
                         />
-                        {isNameError && <span className="text-xs text-red-400">Email required</span>}
+                        {isEmailError && <span className="text-xs text-red-400">Email required</span>}
                     </div>
 
                     <div className="space-y-0">
@@ -139,7 +141,7 @@ export default function RegisterClientPage() {
                                         "aria-invalid": isPasswordError,
                                         required: true,
                                         minLength: 8,
-                                        value: Data.data?.password,
+                                        value: Data.data?.password ?? "",
                                         onChange: Data.handleChangeData,
 
                                     }}
@@ -188,7 +190,7 @@ export default function RegisterClientPage() {
                                         "aria-invalid": isReenterPasswordError,
                                         required: true,
                                         minLength: 8,
-                                        value: Data.data?.reenteredPassword,
+                                        value: Data.data?.reenteredPassword ?? "",
                                         onChange: Data.handleChangeData,
 
                                     }}

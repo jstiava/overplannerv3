@@ -1,8 +1,11 @@
 import VirtualSwiper from "@/app/VirtualSwiper";
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupAction, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarRail } from "@/components/ui/sidebar";
+import { auth } from "@/lib/auth";
 import { getMongoDb } from "@/lib/mongo";
 import { PlusIcon } from "lucide-react";
 import { Metadata } from "next";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import { connection } from "next/server";
 
 export default async function Home() {
@@ -16,6 +19,14 @@ export default async function Home() {
     connected = true;
   } catch (err) {
     console.error("MongoDB connection failed:", err);
+  }
+
+  const session = await auth.api.getSession({
+    headers: await headers()
+  })
+
+  if (!session) {
+    redirect('/login')
   }
 
   return (

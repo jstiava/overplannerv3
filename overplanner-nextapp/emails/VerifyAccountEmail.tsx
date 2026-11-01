@@ -20,16 +20,13 @@ import {
 import { BarebonesFonts } from './theme-fonts';
 import { barebonesBoxedTailwindConfig } from './theme';
 
-const baseUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : '';
+const baseUrl = 'https://overplannerv3.vercel.app/'
 
-interface ConfirmEmailProps {
-  companyName: string;
+interface VerifyAccountEmailProps { 
   url: string;
 }
 
-export const ConfirmEmail = ({ companyName, url }: ConfirmEmailProps) => (
+export const VerifyAccountEmail = ({ url }: VerifyAccountEmailProps) => (
   <Tailwind config={barebonesBoxedTailwindConfig}>
     <Html>
       <Head>
@@ -47,7 +44,7 @@ export const ConfirmEmail = ({ companyName, url }: ConfirmEmailProps) => (
                     <Row>
                       <Column className="w-[32px] align-middle">
                         <Img
-                          src={`${baseUrl}/static/shared/logo-black.png`}
+                          src={`${baseUrl}/overplanner.png`}
                           alt=""
                           width={23}
                           className="block"
@@ -57,7 +54,7 @@ export const ConfirmEmail = ({ companyName, url }: ConfirmEmailProps) => (
                   </Column>
                   <Column align="right" className="w-1/2 py-[7px] align-middle">
                     <Text className="font-13 m-0 text-right font-sans">
-                      <span className="text-fg-3">{companyName}</span>
+                      <span className="text-fg-3">Overplanner</span>
                     </Text>
                   </Column>
                 </Row>
@@ -65,19 +62,19 @@ export const ConfirmEmail = ({ companyName, url }: ConfirmEmailProps) => (
 
               <Section className="bg-bg-2 mobile:px-6 mobile:py-12 rounded-[8px] px-[40px] py-[64px] text-center">
                 <Section className="mb-3">
-                  <Img
+                  {/* <Img
                     src={`${baseUrl}/static/shared/logo-black.png`}
                     alt="Logo"
                     width={48}
                     className="mx-auto mb-5 block"
-                  />
+                  /> */}
                   <Heading as="h1" className="font-28 text-fg m-0 font-sans">
                     We&apos;re almost there!
                   </Heading>
                 </Section>
 
                 <Text className="font-16 text-fg-2 mx-auto mt-0 mb-8 max-w-[380px] text-center font-sans">
-                  Thank you for signing up for {companyName}.
+                  Thank you for signing up for Overplanner.
                   <br />
                   To verify your account, we just need to confirm your email
                   address.
@@ -164,7 +161,7 @@ export const ConfirmEmail = ({ companyName, url }: ConfirmEmailProps) => (
                       <Link href="https://example.com/" className="text-fg-3">
                         Unsubscribe
                       </Link>{' '}
-                      from {companyName} marketing emails.
+                      from Overplanner marketing emails.
                     </Text>
                   </Column>
                 </Row>
@@ -177,9 +174,8 @@ export const ConfirmEmail = ({ companyName, url }: ConfirmEmailProps) => (
   </Tailwind>
 );
 
-ConfirmEmail.PreviewProps = {
-  companyName: 'Barebones',
+VerifyAccountEmail.PreviewProps = { 
   url: 'https://example.com/',
-} satisfies ConfirmEmailProps;
+} satisfies VerifyAccountEmailProps;
 
-export default ConfirmEmail;
+export default VerifyAccountEmail;

@@ -18,4 +18,4 @@ export const NodemailerEmailTransporter = nodemailer.createTransport({
         sesClient,
         SendEmailCommand,
     },
-})
+});

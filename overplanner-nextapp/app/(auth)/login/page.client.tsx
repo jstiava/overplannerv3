@@ -8,27 +8,25 @@ import useDataStore from "@/components/useDataStore";
 import { authClient } from "@/lib/auth-client";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 type DataStoreType = {
     email: string,
     password: string,
-    reenteredPassword: string,
-    name: string,
-    image?: string | null
 };
 
 export default function LoginClientPage() {
 
+    const router = useRouter();
     const Data = useDataStore<DataStoreType | null>(null);
+
     const [progress, setProgress] = useState('entry');
     const [showPassword, setShowPassword] = useState(false);
     const [submittedOnce, setSubmittedOnce] = useState(false);
 
-    const isNameError = submittedOnce && !Data.data?.name;
     const isEmailError = submittedOnce && !Data.data?.email;
     const isPasswordError = submittedOnce && !Data.data?.password;
-    const isReenterPasswordError = submittedOnce && (!Data.data?.reenteredPassword || !Data.data?.password || (Data.data.password != Data.data.reenteredPassword));
 
 
 
@@ -41,16 +39,13 @@ export default function LoginClientPage() {
         }
 
 
-        if ([isNameError, isEmailError, isPasswordError, isReenterPasswordError].some(Boolean)) {
+        if ([isEmailError, isPasswordError].some(Boolean)) {
             return;
         }
 
-        const { data, error } = await authClient.signUp.email({
-            email: props.email, // user email address
-            password: props.password, // user password -> min 8 characters by default
-            name: props.name, // user display name
-            image: props.image ?? undefined, // User image URL (optional)
-            callbackURL: "/dashboard" // A URL to redirect to after the user verifies their email (optional)
+        const { data, error } = await authClient.signIn.email({
+            email: props.email,
+            password: props.password
         }, {
             onRequest: (ctx) => {
                 //show loading
@@ -59,13 +54,13 @@ export default function LoginClientPage() {
             onSuccess: (ctx) => {
                 //redirect to the dashboard or sign in page
                 setProgress('submitted');
-                alert("Success")
+                router.push('/')
             },
             onError: (ctx) => {
                 // display the error message
                 alert(ctx.error.message);
             },
-        });
+        })
 
     }
 
@@ -98,12 +93,12 @@ export default function LoginClientPage() {
                                 "aria-invalid": isEmailError,
                                 required: true,
                                 minLength: 8,
-                                value: Data.data?.email,
+                                value: Data.data?.email ?? "",
                                 onChange: Data.handleChangeData,
                                 className: "w-full rounded-md border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring h-10"
                             }}
                         />
-                        {isNameError && <span className="text-xs text-red-400">Email required</span>}
+                        {isEmailError && <span className="text-xs text-red-400">Email required</span>}
                     </div>
 
                     <div className="space-y-0">
@@ -122,7 +117,7 @@ export default function LoginClientPage() {
                                         "aria-invalid": isPasswordError,
                                         required: true,
                                         minLength: 8,
-                                        value: Data.data?.password,
+                                        value: Data.data?.password ?? "",
                                         onChange: Data.handleChangeData,
 
                                     }}
