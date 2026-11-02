@@ -26,6 +26,7 @@ export default function RegisterClientPage() {
     const [progress, setProgress] = useState('entry');
     const [showPassword, setShowPassword] = useState(false);
     const [submittedOnce, setSubmittedOnce] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     const isNameError = submittedOnce && !Data.data?.name;
     const isEmailError = submittedOnce && !Data.data?.email;
@@ -65,7 +66,9 @@ export default function RegisterClientPage() {
             },
             onError: (ctx) => {
                 // display the error message
-                alert(ctx.error.message);
+                setError(ctx.error.message ?? "Something went wrong");
+                setProgress('entry')
+
             },
         });
 
@@ -248,6 +251,8 @@ export default function RegisterClientPage() {
                         Sign in
                     </Link>
                 </p>
+
+                {error && <span className="text-xs text-red-400">{error}</span>}
 
                 <p className="debug">{JSON.stringify(Data.data, null, 2)}</p>
             </div>
