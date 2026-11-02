@@ -6,13 +6,14 @@ import { User } from "better-auth";
 import { render } from "react-email";
 
 
+const NEXT_PUBLIC_SITE_URI = 'https://overplannerv3.vercel.app'
 
 export default async function sendVerificationEmail(props: { user: User, token: string }) {
 
 
       const activationUrl = new URL(
         '/activate-account',
-        process.env.NODE_ENV == 'development' ? 'http://localhost:3000' : process.env.NEXT_PUBLIC_SITE_URL
+        process.env.NODE_ENV == 'development' ? 'http://localhost:3000' : NEXT_PUBLIC_SITE_URI
       )
 
       activationUrl.searchParams.set('token', props.token)

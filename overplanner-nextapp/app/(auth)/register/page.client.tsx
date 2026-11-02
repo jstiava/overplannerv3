@@ -49,11 +49,11 @@ export default function RegisterClientPage() {
         }
 
         const { data, error } = await authClient.signUp.email({
-            email: props.email, // user email address
-            password: props.password, // user password -> min 8 characters by default
-            name: props.name, // user display name
-            image: props.image ?? undefined, // User image URL (optional)
-            callbackURL: "/dashboard" // A URL to redirect to after the user verifies their email (optional)
+            email: props.email,
+            password: props.password,
+            name: props.name,
+            image: props.image ?? undefined,
+            callbackURL: "/dashboard"
         }, {
             onRequest: (ctx) => {
                 //show loading
@@ -68,7 +68,6 @@ export default function RegisterClientPage() {
                 // display the error message
                 setError(ctx.error.message ?? "Something went wrong");
                 setProgress('entry')
-
             },
         });
 

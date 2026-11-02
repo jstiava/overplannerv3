@@ -1,9 +1,6 @@
-import VerifyAccountEmail from "@/emails/VerifyAccountEmail";
 import { betterAuth } from "better-auth";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { MongoClient } from "mongodb";
-import { render } from "react-email";
-import { NodemailerEmailTransporter } from "./emails";
 import sendVerificationEmail from "@/app/(auth)/register/sendVerificationEmail";
 
 const client = new MongoClient(process.env.MONGO_URI!);
